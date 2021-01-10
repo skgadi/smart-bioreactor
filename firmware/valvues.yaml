@@ -1,0 +1,80 @@
+esphome:
+  name: "1605931940622"
+  platform: ESP32
+  board: esp32doit-devkit-v1
+  includes:
+    - my_custom_sensor.h
+    - custom-components/temp_hum.h
+
+wifi:
+  ssid: "UYAMAK"
+  password: "DJS5Kn4PUK"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "1605931940622 Fallback Hotspot"
+    password: "Ghe4yHB9Dt1I"
+
+logger:
+
+ota:
+
+api:
+
+web_server:
+  port: 80
+  auth:
+    username: HelloUser
+    password: HelloPass
+
+switch:
+  - platform: gpio
+    name: "Air tank 1"
+    pin: GPIO1
+  - platform: gpio
+    name: "Air tank 2"
+    pin: GPIO2
+  - platform: gpio
+    name: "Air tank 3"
+    pin: GPIO3
+  - platform: gpio
+    name: "Air tank 4"
+    pin: GPIO15
+  - platform: gpio
+    name: "Oxygen tank"
+    pin: GPIO5
+  
+
+    
+sensor:
+  - platform: dht
+    pin: GPIO4
+    temperature:
+      name: "Bed Temperature"
+    humidity:
+      name: "Bed Humidity"
+    update_interval: 60s    
+    
+  - platform: custom
+    lambda: |-
+      auto my_sensor = new MyCustomSensor();
+      App.register_component(my_sensor);
+      return {my_sensor};
+
+    sensors:
+      name: "My Custom Sensor"
+
+  - platform: custom
+    lambda: |-
+      auto my_sensor = new MyCustomSensor1();
+      App.register_component(my_sensor);
+      return {my_sensor->temperature_sensor, my_sensor->humidity_sensor};
+
+    sensors:
+    - name: "My Custom Temperature Sensor"
+      unit_of_measurement: °C
+      accuracy_decimals: 2
+    - name: "My humidity Sensor"
+      unit_of_measurement: "%"
+      accuracy_decimals: 2
+      icon: "mdi:water-percent"
